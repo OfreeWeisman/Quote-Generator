@@ -3,11 +3,24 @@ const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterButton = document.getElementById('twitter');
 const newQuoteButton = document.getElementById('new-quote');
+const loader = document.getElementById('loader');
 
+function showLoadingSpinner() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+function removeLoadingSpinner() {
+    if (!loader.hidden) {
+        quoteContainer.hidden = false;
+        loader.hidden = true;
+    }
+}
 
 // Get Quote From API
 async function getQuote() {
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+    showLoadingSpinner();
+    const proxyUrl = 'https://calm-mesa-54883.herokuapp.com/'
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
     try {
         const response = await fetch(proxyUrl + apiUrl);
@@ -26,6 +39,8 @@ async function getQuote() {
         }
         quoteText.innerText = data.quoteText;
 
+        // Stop Loader, Show Quote
+        removeLoadingSpinner();
     } catch (error) {
         getQuote();
     }
@@ -44,5 +59,5 @@ newQuoteButton.addEventListener('click', getQuote);
 twitterButton.addEventListener('click', tweetQuote);
 
 // On Load
-// getQuote()
+getQuote();
 
